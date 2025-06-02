@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mind Reader</title>
+  <style>
+    body {
+      background-color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 100px;
+      position: relative;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    #explosion {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #explosion img {
+      width: 600px;
+      height: auto;
+    }
+    #input-container {
+      margin-bottom: 10px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 1em;
+      width: 200px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1.5em;
+      height: 2em;
+      transition: opacity 0.5s ease-in-out;
+    }
+    #result {
+      margin-top: 10px;
+      font-size: 2em;
+      display: none;
+    }
+    #progress-container {
+      width: 300px;
+      height: 10px;
+      background-color: #e0e0e0;
+      margin: 20px auto;
+      border-radius: 5px;
+      overflow: hidden;
+      display: none;
+    }
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #4caf50;
+      transition: width 1s linear;
+    }
+    .explode {
+      animation: explode 1s ease-out forwards;
+    }
+    @keyframes explode {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.7; }
+      100% { transform: scale(1.2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>I can read your mind</h1>
+  <div id="explosion">
+    <img src="https://media.giphy.com/media/oe33xf3B50fsc/giphy.gif" alt="Explosion GIF">
+  </div>
+  <div id="input-container">
+    <input type="text" id="userInput" placeholder="Enter a number" />
+    <br/><br/>
+    <button id="readButton">Read My Mind</button>
+  </div>
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+  <div id="message"></div>
+  <div id="result"></div>
+
+  <script>
+    const messages = [
+      "wohooo",
+      "are you ready biatch",
+      "i know I am",
+      "reading your not-so-empty mind",
+      "here we gooooo"
+    ];
+
+    document.getElementById("readButton").addEventListener("click", () => {
+      const input = document.getElementById("userInput").value;
+      const messageBox = document.getElementById("message");
+      const resultBox = document.getElementById("result");
+      const explosion = document.getElementById("explosion");
+      const progressContainer = document.getElementById("progress-container");
+      const progressBar = document.getElementById("progress-bar");
+
+      if (!input.trim()) {
+        alert("Please enter a number!");
+        return;
+      }
+
+      let index = 0;
+      messageBox.style.opacity = 1;
+      resultBox.style.display = "none";
+      explosion.style.display = "none";
+      explosion.classList.remove("explode");
+
+      // Reset and show progress bar
+      progressContainer.style.display = "block";
+      progressBar.style.width = "0%";
+
+      const interval = setInterval(() => {
+        messageBox.textContent = messages[index];
+        progressBar.style.width = `${((index + 1) / messages.length) * 100}%`;
+        index++;
+        if (index >= messages.length) {
+          clearInterval(interval);
+          setTimeout(() => {
+            messageBox.textContent = "";
+            resultBox.textContent = `You thought of: ${input}`;
+            resultBox.style.display = "block";
+            progressContainer.style.display = "none";
+            setTimeout(() => {
+              explosion.style.display = "flex";
+              explosion.classList.add("explode");
+              setTimeout(() => {
+                explosion.style.display = "none";
+              }, 1000);
+            }, 500);
+          }, 1000);
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
